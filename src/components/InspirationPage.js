@@ -24,7 +24,6 @@ const InspirationPage = () => {
       'Branding': 'bg-design-green',
       'Typography': 'bg-design-yellow',
       'Generative Art': 'bg-design-purple',
-      'Generatve art': 'bg-design-purple', // 兼容JSON中的拼写
       'Motion': 'bg-orange-500',
       'Digital': 'bg-cyan-500',
       'Graphic': 'bg-pink-500',
@@ -50,7 +49,7 @@ const InspirationPage = () => {
           autoPlay
           loop
           muted
-          className="object-cover object-center w-full h-[300px] rounded-xl"
+          className="w-full h-full object-cover"
           onError={(e) => {
             e.target.style.display = 'none';
             e.target.parentNode.style.backgroundColor = '#D9D9D9';
@@ -62,7 +61,7 @@ const InspirationPage = () => {
         <img
           src={encodedPath}
           alt={project.title}
-          className="object-cover object-center w-full h-[300px] rounded-xl"
+          className="w-full h-full object-cover"
           onError={(e) => {
             e.target.style.display = 'none';
             e.target.parentNode.style.backgroundColor = '#D9D9D9';
@@ -73,12 +72,7 @@ const InspirationPage = () => {
   };
 
   const filteredProjects = activeFilter === 'all' ? projects : projects.filter(project => 
-    project.tags.some(tag => {
-      // 处理"Generative Art"和"Generatve art"的匹配
-      const normalizedTag = tag.toLowerCase().replace(/generatve/, 'generative');
-      const normalizedFilter = activeFilter.toLowerCase().replace(/generative art/, 'generative art');
-      return normalizedTag === normalizedFilter;
-    })
+    project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
   );
 
   return (
