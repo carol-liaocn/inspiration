@@ -509,16 +509,125 @@ background: #131313;
 font-size: 1.5rem (24px);
 font-weight: 500;
 color: #E2E2E2;
+text-transform: uppercase;
+```
+
+### 四栏布局结构
+```css
+/* 项目网格容器 */
+display: grid;
+grid-template-columns: 1fr 3fr; /* 1:3 比例，信息栏占25%，图片区占75% */
+gap: 1.5rem (24px);
 margin-bottom: 2rem (32px);
 ```
 
-### 内容区域
+### 第一栏：项目信息区域
 ```css
-/* 占位文字 */
+/* 信息栏容器 */
+display: flex;
+flex-direction: column;
+height: 100%;
+
+/* 信息组容器 */
+display: flex;
+flex-direction: column;
+gap: 0.375rem (6px); /* 元素间距6px，保持一致 */
+
+/* 项目标题 */
+font-size: 1.5rem (24px);
+font-weight: 500;
+color: #E2E2E2;
+line-height: 1.25;
+text-transform: capitalize; /* 首字母大写 */
+
+/* 项目作者 */
 font-size: 1.125rem (18px);
+font-weight: 500;
 color: #787878;
-text-align: center;
-padding: 4rem (64px);
+text-transform: capitalize;
+
+/* 标签容器 */
+display: flex;
+flex-wrap: wrap;
+gap: 0.375rem (6px); /* 标签横向间距6px */
+
+/* 单个标签 */
+font-size: 0.875rem (14px);
+font-weight: 500;
+padding: 0.125rem 0.5rem (2px 8px);
+color: #131313;
+border-radius: 0.375rem (6px);
+line-height: tight;
+
+/* 注意：Team Project页面无View All按钮 */
+```
+
+### 第二到四栏：图片展示区域
+```css
+/* 图片网格容器 */
+grid-column: span 3;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1rem (16px);
+
+/* 显示数量 */
+每个项目显示: 3张图片 (单行);
+
+/* 单个图片容器 - 竖版3:4比例 */
+aspect-ratio: 3/4; /* 竖版比例 */
+background: #D9D9D9;
+overflow: hidden;
+
+/* 图片 */
+width: 100%;
+height: 100%;
+object-fit: cover;
+```
+
+### 分隔线
+```css
+/* 第一条分隔线 */
+width: 100%;
+height: 0.2px;
+background: #E2E2E2;
+margin-bottom: 1rem (16px);
+padding: 0 2rem (32px);
+
+/* 项目之间的分隔线 */
+width: 100%;
+height: 0.2px;
+background: #E2E2E2;
+margin-bottom: 1rem (16px);
+display: 从第二个项目开始显示;
+```
+
+### Team Project页面数据规格
+```css
+/* 项目数量 */
+总项目数: 10个团队项目
+
+/* 页面滚动 */
+scroll-behavior: smooth;
+overflow-y: auto;
+
+/* 项目分布 */
+包含所有分类标签的项目组合
+无筛选器功能
+页面支持垂直滚动浏览所有内容
+
+/* 图片比例特点 */
+竖版3:4比例，突出纵向视觉效果
+无悬浮交互效果，保持静态显示
+
+/* 信息栏特点 */
+无View All按钮和箭头图标
+项目信息三元素间距统一为6px
+简洁的垂直布局设计
+
+/* 项目数据示例 */
+项目名称: project name, creative vision, digital future, motion flow, brand identity, type experiment, ai generation, interactive design, visual identity
+作者名称: author name, sarah chen, alex rodriguez, maria kowalski, david kim, elena vasquez, james wright, lisa wang, thomas anderson
+分类标签: 涵盖Branding, Digital, Motion, Graphic, Typography, Generative art, Aigc等所有类别
 ```
 
 ---
