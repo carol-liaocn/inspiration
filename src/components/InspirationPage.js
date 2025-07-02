@@ -40,10 +40,13 @@ const InspirationPage = () => {
 
   // 渲染媒体内容（图片或视频）
   const renderMedia = (project) => {
+    // 对路径进行URL编码处理，但保留斜杠
+    const encodedPath = project.image.split('/').map(segment => encodeURIComponent(segment)).join('/');
+    
     if (isVideo(project.image)) {
       return (
         <video
-          src={project.image}
+          src={encodedPath}
           autoPlay
           loop
           muted
@@ -57,7 +60,7 @@ const InspirationPage = () => {
     } else {
       return (
         <img
-          src={project.image}
+          src={encodedPath}
           alt={project.title}
           className="object-cover object-center w-full h-[300px] rounded-xl"
           onError={(e) => {
