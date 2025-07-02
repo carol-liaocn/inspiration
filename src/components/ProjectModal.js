@@ -66,7 +66,7 @@ const ProjectModal = ({ project, onClose }) => {
         {/* Left side - Image Gallery */}
         <div className="w-[70%] bg-design-yellow min-h-0" style={{ paddingLeft: '1.2%' }}>
           {/* Scrollable image grid */}
-          <div className="h-full overflow-y-auto p-4 min-h-0 scrollbar-hide">
+          <div className="h-full overflow-y-auto min-h-0 scrollbar-hide" style={{ padding: '1rem' }}>
             <div className="grid grid-cols-2 gap-4">
               {/* First image - spans two columns */}
               <div className="col-span-2 aspect-[3/2] bg-design-gray">
@@ -93,15 +93,15 @@ const ProjectModal = ({ project, onClose }) => {
         </div>
 
         {/* Right side - Content */}
-        <div className="w-[30%] py-8 bg-design-yellow text-dark-bg flex flex-col min-h-0" style={{ paddingRight: '1.2%' }}>
+        <div className="w-[30%] bg-design-yellow text-dark-bg flex flex-col min-h-0" style={{ paddingTop: '2rem', paddingBottom: '2rem', paddingRight: '1.2%', paddingLeft: '0' }}>
 
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2 uppercase">{project.title}</h2>
-            <p className="text-lg font-medium">by {project.author}</p>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h2 className="font-bold uppercase" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', lineHeight: '1.2' }}>{project.title}</h2>
+            <p className="font-medium" style={{ fontSize: '1.125rem', lineHeight: '1.3' }}>by {project.author}</p>
           </div>
 
-          <div className="flex-1 overflow-y-auto min-h-0 mb-6">
-            <p className="text-lg leading-relaxed whitespace-pre-line font-medium text-justify">
+          <div className="flex-1 overflow-y-auto min-h-0" style={{ marginBottom: '1.5rem' }}>
+            <p className="whitespace-pre-line font-medium text-justify" style={{ fontSize: '1.125rem', lineHeight: '1.625' }}>
               {project.description}
             </p>
           </div>
@@ -111,7 +111,8 @@ const ProjectModal = ({ project, onClose }) => {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-dark-bg text-sm font-medium underline hover:no-underline"
+              className="text-dark-bg font-medium underline hover:no-underline"
+              style={{ fontSize: '0.875rem' }}
             >
               {project.link}
             </a>
