@@ -190,7 +190,7 @@ z-index: 50;
 
 /* 弹窗主体 */
 background: #FFFF00;
-max-width: 72rem (1152px);
+max-width: 86.4rem (1382px); /* 原72rem的120% */
 max-height: 80vh; /* 限制最大高度为视口80% */
 width: 100%;
 margin: 0 4rem (0 64px);
@@ -351,7 +351,7 @@ text-decoration: underline;
 
 .modal-body {
   background: #FFFF00;
-  max-width: 72rem; /* 1152px */
+  max-width: 86.4rem; /* 1382px - 原72rem的120% */
   max-height: 80vh;
   width: 100%;
   margin: 0 4rem; /* 64px */

@@ -162,7 +162,7 @@
 ### 当前弹窗完整规格
 ```css
 /* 弹窗主体 */
-max-width: 6xl (1152px);
+max-width: 86.4rem (1382px); /* 120%宽度 */
 max-height: 80vh;
 margin: 0 64px;
 layout: 70% | 30%;

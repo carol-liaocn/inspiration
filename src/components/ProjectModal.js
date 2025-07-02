@@ -62,7 +62,7 @@ const ProjectModal = ({ project, onClose }) => {
         </svg>
       </button>
 
-      <div className="bg-design-yellow max-w-6xl max-h-[80vh] w-full mx-16 overflow-hidden flex">
+      <div className="bg-design-yellow max-h-[80vh] w-full mx-16 overflow-hidden flex" style={{ maxWidth: '86.4rem' }}>
         {/* Left side - Image Gallery */}
         <div className="w-[70%] bg-design-yellow min-h-0" style={{ paddingLeft: '1.2%' }}>
           {/* Scrollable image grid */}
