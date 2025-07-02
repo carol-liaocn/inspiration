@@ -62,40 +62,40 @@ const ProjectModal = ({ project, onClose }) => {
         </svg>
       </button>
 
-      <div className="bg-design-yellow max-w-6xl w-full mx-16 overflow-hidden flex">
+      <div className="bg-design-yellow max-w-6xl max-h-[80vh] w-full mx-16 overflow-hidden flex">
         {/* Left side - Image Gallery */}
-        <div className="w-[70%] bg-design-yellow flex flex-col p-4" style={{ paddingLeft: '1.2%' }}>
+        <div className="w-[70%] bg-design-yellow flex flex-col p-4 min-h-0" style={{ paddingLeft: '1.2%' }}>
           {/* Main large image */}
-          <div className="aspect-[3/2] bg-design-gray mb-4">
+          <div className="flex-1 bg-design-gray mb-4 min-h-0">
             {renderMedia(project.image, project.title)}
           </div>
           
           {/* Two smaller images below */}
-          <div className="flex gap-4">
-            <div className="w-1/2 aspect-square bg-design-gray">
+          <div className="flex gap-4 h-24">
+            <div className="w-1/2 bg-design-gray">
               {renderMedia(`${project.image}?variant=2`, `${project.title} variant 2`)}
             </div>
-            <div className="w-1/2 aspect-square bg-design-gray">
+            <div className="w-1/2 bg-design-gray">
               {renderMedia(`${project.image}?variant=3`, `${project.title} variant 3`)}
             </div>
           </div>
         </div>
 
         {/* Right side - Content */}
-        <div className="w-[30%] py-12 bg-design-yellow text-dark-bg relative flex flex-col" style={{ paddingRight: '1.2%' }}>
+        <div className="w-[30%] py-8 bg-design-yellow text-dark-bg flex flex-col min-h-0" style={{ paddingRight: '1.2%' }}>
 
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2 uppercase">{project.title}</h2>
-            <p className="text-2xl font-medium">by {project.author}</p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold mb-2 uppercase">{project.title}</h2>
+            <p className="text-lg font-medium">by {project.author}</p>
           </div>
 
-          <div className="flex-1">
-            <p className="text-2xl leading-relaxed whitespace-pre-line font-medium text-justify">
+          <div className="flex-1 overflow-y-auto min-h-0 mb-6">
+            <p className="text-lg leading-relaxed whitespace-pre-line font-medium text-justify">
               {project.description}
             </p>
           </div>
 
-          <div className="absolute bottom-12 left-0 right-0 text-left" style={{ paddingRight: '1.2%' }}>
+          <div className="text-left">
             <a 
               href={project.link}
               target="_blank"

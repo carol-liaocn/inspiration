@@ -191,6 +191,7 @@ z-index: 50;
 /* 弹窗主体 */
 background: #FFFF00;
 max-width: 72rem (1152px);
+max-height: 80vh; /* 限制最大高度为视口80% */
 width: 100%;
 margin: 0 4rem (0 64px);
 overflow: hidden;
@@ -227,20 +228,22 @@ display: flex;
 flex-direction: column;
 padding: 1rem (16px);
 padding-left: 1.2%; /* 精确边距 */
+min-height: 0; /* 允许收缩 */
 
 /* 主图片 */
-aspect-ratio: 3/2;
+flex: 1; /* 自适应剩余空间 */
 background: #D9D9D9;
 margin-bottom: 1rem (16px);
 border-radius: 0; /* 无圆角 */
+min-height: 0; /* 允许收缩 */
 
 /* 小图片容器 */
 display: flex;
 gap: 1rem (16px);
+height: 6rem (96px); /* 固定高度 */
 
 /* 单个小图片 */
 width: 50%;
-aspect-ratio: 1/1;
 background: #D9D9D9;
 border-radius: 0; /* 无圆角 */
 ```
@@ -249,50 +252,49 @@ border-radius: 0; /* 无圆角 */
 ```css
 /* 容器 */
 width: 30%;
-padding-top: 3rem (48px);
-padding-bottom: 3rem (48px);
+padding-top: 2rem (32px);
+padding-bottom: 2rem (32px);
 padding-right: 1.2%; /* 精确边距 */
 padding-left: 0; /* 无左边距 */
 background: #FFFF00;
 color: #131313;
-position: relative;
 display: flex;
 flex-direction: column;
+min-height: 0; /* 允许收缩 */
 ```
 
 ### 文字内容规格
 ```css
 /* 标题区域 */
-margin-bottom: 2rem (32px);
+margin-bottom: 1.5rem (24px);
 
 /* 主标题 */
-font-size: 1.875rem (30px);
+font-size: 1.5rem (24px);
 font-weight: 700;
 margin-bottom: 0.5rem (8px);
 text-transform: uppercase;
 line-height: 1.2;
 
 /* 副标题（作者） */
-font-size: 1.5rem (24px);
+font-size: 1.125rem (18px);
 font-weight: 500;
 line-height: 1.3;
 
 /* 描述区域 */
 flex: 1; /* 占据剩余空间 */
+overflow-y: auto; /* 长文本可滚动 */
+min-height: 0; /* 允许收缩 */
+margin-bottom: 1.5rem (24px);
 
 /* 描述文字 */
-font-size: 1.5rem (24px);
+font-size: 1.125rem (18px);
 font-weight: 500;
 line-height: 1.625;
 text-align: justify; /* 两端对齐 */
 white-space: pre-line;
 
 /* 链接区域 */
-position: absolute;
-bottom: 3rem (48px);
-left: 0;
-right: 0;
-padding-right: 1.2%; /* 与容器右边距一致 */
+position: static; /* 非绝对定位 */
 text-align: left;
 
 /* 链接样式 */
