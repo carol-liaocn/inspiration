@@ -232,6 +232,13 @@ height: 100%;
 overflow-y: auto; /* 垂直滚动 */
 padding: 1rem (16px);
 min-height: 0; /* 允许收缩 */
+scrollbar-width: none; /* Firefox隐藏滚动条 */
+-ms-overflow-style: none; /* IE/Edge隐藏滚动条 */
+
+/* WebKit浏览器隐藏滚动条 */
+::-webkit-scrollbar {
+  display: none;
+}
 
 /* 图片网格容器 */
 display: grid;

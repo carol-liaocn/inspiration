@@ -21,4 +21,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* 隐藏滚动条但保持滚动功能 */
+.scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+  /* WebKit browsers */
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 } 
