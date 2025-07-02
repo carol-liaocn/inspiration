@@ -224,26 +224,28 @@ stroke-width: 1px;
 /* 容器 */
 width: 70%;
 background: #FFFF00;
-display: flex;
-flex-direction: column;
-padding: 1rem (16px);
 padding-left: 1.2%; /* 精确边距 */
 min-height: 0; /* 允许收缩 */
 
-/* 主图片 */
-flex: 1; /* 自适应剩余空间 */
-background: #D9D9D9;
-margin-bottom: 1rem (16px);
-border-radius: 0; /* 无圆角 */
+/* 可滚动区域 */
+height: 100%;
+overflow-y: auto; /* 垂直滚动 */
+padding: 1rem (16px);
 min-height: 0; /* 允许收缩 */
 
-/* 小图片容器 */
-display: flex;
+/* 图片网格容器 */
+display: grid;
+grid-template-columns: repeat(2, 1fr); /* 两列布局 */
 gap: 1rem (16px);
-height: 6rem (96px); /* 固定高度 */
 
-/* 单个小图片 */
-width: 50%;
+/* 首图 - 跨两列 */
+grid-column: span 2;
+aspect-ratio: 3/2;
+background: #D9D9D9;
+border-radius: 0; /* 无圆角 */
+
+/* 其他图片 - 单列 */
+aspect-ratio: 1/1; /* 正方形 */
 background: #D9D9D9;
 border-radius: 0; /* 无圆角 */
 ```

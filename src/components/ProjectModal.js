@@ -64,19 +64,30 @@ const ProjectModal = ({ project, onClose }) => {
 
       <div className="bg-design-yellow max-w-6xl max-h-[80vh] w-full mx-16 overflow-hidden flex">
         {/* Left side - Image Gallery */}
-        <div className="w-[70%] bg-design-yellow flex flex-col p-4 min-h-0" style={{ paddingLeft: '1.2%' }}>
-          {/* Main large image */}
-          <div className="flex-1 bg-design-gray mb-4 min-h-0">
-            {renderMedia(project.image, project.title)}
-          </div>
-          
-          {/* Two smaller images below */}
-          <div className="flex gap-4 h-24">
-            <div className="w-1/2 bg-design-gray">
-              {renderMedia(`${project.image}?variant=2`, `${project.title} variant 2`)}
-            </div>
-            <div className="w-1/2 bg-design-gray">
-              {renderMedia(`${project.image}?variant=3`, `${project.title} variant 3`)}
+        <div className="w-[70%] bg-design-yellow min-h-0" style={{ paddingLeft: '1.2%' }}>
+          {/* Scrollable image grid */}
+          <div className="h-full overflow-y-auto p-4 min-h-0">
+            <div className="grid grid-cols-2 gap-4">
+              {/* First image - spans two columns */}
+              <div className="col-span-2 aspect-[3/2] bg-design-gray">
+                {renderMedia(project.image, project.title)}
+              </div>
+              
+              {/* Additional images in two columns */}
+              <div className="aspect-square bg-design-gray">
+                {renderMedia(`${project.image}?variant=2`, `${project.title} variant 2`)}
+              </div>
+              <div className="aspect-square bg-design-gray">
+                {renderMedia(`${project.image}?variant=3`, `${project.title} variant 3`)}
+              </div>
+              
+              {/* More placeholder images to demonstrate scrolling */}
+              <div className="aspect-square bg-design-gray"></div>
+              <div className="aspect-square bg-design-gray"></div>
+              <div className="aspect-square bg-design-gray"></div>
+              <div className="aspect-square bg-design-gray"></div>
+              <div className="aspect-square bg-design-gray"></div>
+              <div className="aspect-square bg-design-gray"></div>
             </div>
           </div>
         </div>
