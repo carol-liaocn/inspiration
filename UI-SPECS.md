@@ -332,9 +332,11 @@ text-decoration: underline;
 ### 技术亮点总结
 - **多浏览器滚动条隐藏**: Firefox、WebKit、IE/Edge全兼容
 - **精确间距控制**: 1.2%容器边距 + 0内部边距的双层间距系统
-- **CSS Grid + Flexbox**: 网格图片布局 + 弹性文字布局的混合方案
+- **Masonry瀑布流布局**: 随机分配图片、智能跨列、多种宽高比
+- **新数据结构支持**: inspiration_data.json、main_asset、assets数组
 - **媒体智能渲染**: 图片/视频自动识别 + URL编码处理
 - **高度自适应**: 80vh限制 + min-h-0收缩的响应式高度
+- **标签字符串处理**: 自动分割逗号分隔的标签字符串
 
 ### 最终UI数据记录
 ```css
