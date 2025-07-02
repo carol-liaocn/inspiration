@@ -46,6 +46,28 @@ const ProjectModal = ({ project, onClose }) => {
     }
   };
 
+  // 随机分配图片到两栏，并决定是否跨两列
+  const generateMasonryLayout = (assets) => {
+    const layoutItems = [];
+    
+    assets.forEach((asset, index) => {
+      // 随机决定是否为大图（跨两列）
+      const isLargeImage = Math.random() < 0.3; // 30%概率为大图
+      
+      layoutItems.push({
+        src: asset,
+        id: `asset-${index}`,
+        isLarge: isLargeImage,
+        // 随机高度比例（仅用于小图）
+        aspectRatio: isLargeImage ? '3/2' : ['1/1', '4/3', '3/4'][Math.floor(Math.random() * 3)]
+      });
+    });
+    
+    return layoutItems;
+  };
+
+  const masonryItems = project.assets ? generateMasonryLayout(project.assets) : [];
+
   return (
     <div 
       className="fixed inset-0 bg-dark-bg bg-opacity-80 flex items-center justify-center z-50"
@@ -68,26 +90,35 @@ const ProjectModal = ({ project, onClose }) => {
           {/* Scrollable image grid */}
           <div className="h-full overflow-y-auto min-h-0 scrollbar-hide" style={{ paddingTop: '0', paddingRight: '1rem', paddingBottom: '1rem', paddingLeft: '0' }}>
             <div className="grid grid-cols-2 gap-4">
-              {/* First image - spans two columns */}
-              <div className="col-span-2 aspect-[3/2] bg-design-gray">
-                {renderMedia(project.image, project.title)}
-              </div>
+              {/* Main asset - 主图，跨两列 */}
+              {project.main_asset && (
+                <div className="col-span-2 aspect-[3/2] bg-design-gray">
+                  {renderMedia(project.main_asset, `${project.title} main asset`)}
+                </div>
+              )}
               
-              {/* Additional images in two columns */}
-              <div className="aspect-square bg-design-gray">
-                {renderMedia(`${project.image}?variant=2`, `${project.title} variant 2`)}
-              </div>
-              <div className="aspect-square bg-design-gray">
-                {renderMedia(`${project.image}?variant=3`, `${project.title} variant 3`)}
-              </div>
+              {/* Additional assets in masonry layout */}
+              {masonryItems.map((item) => (
+                <div 
+                  key={item.id}
+                  className={`bg-design-gray ${item.isLarge ? 'col-span-2' : ''}`}
+                  style={{ 
+                    aspectRatio: item.aspectRatio 
+                  }}
+                >
+                  {renderMedia(item.src, `${project.title} asset`)}
+                </div>
+              ))}
               
-              {/* More placeholder images to demonstrate scrolling */}
-              <div className="aspect-square bg-design-gray"></div>
-              <div className="aspect-square bg-design-gray"></div>
-              <div className="aspect-square bg-design-gray"></div>
-              <div className="aspect-square bg-design-gray"></div>
-              <div className="aspect-square bg-design-gray"></div>
-              <div className="aspect-square bg-design-gray"></div>
+              {/* 如果没有assets，显示一些占位图 */}
+              {(!project.assets || project.assets.length === 0) && (
+                <>
+                  <div className="aspect-square bg-design-gray"></div>
+                  <div className="aspect-square bg-design-gray"></div>
+                  <div className="aspect-square bg-design-gray"></div>
+                  <div className="aspect-square bg-design-gray"></div>
+                </>
+              )}
             </div>
           </div>
         </div>

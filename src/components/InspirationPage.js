@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import ProjectModal from './ProjectModal';
-import inspirationProjects from '../data/inspiration_projects.json';
+import inspirationData from '../data/inspiration_data.json';
 
 const InspirationPage = () => {
   const [selectedProject, setSelectedProject] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('All');
 
-  // 从JSON数据创建项目列表，添加id和默认的描述、作者、链接信息
-  const projects = inspirationProjects.map((project, index) => ({
-    id: index + 1,
-    title: project.title,
-    image: project.image,
-    tags: project.tags,
-    description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-    author: 'studiodumbar',
-    link: 'https://studiodumbar.com/work/openai'
+  // 处理标签字符串，转换为数组
+  const processedProjects = inspirationData.map(project => ({
+    ...project,
+    // 将tags字符串分割为数组，并去除空格
+    tags: project.tags.split(',').map(tag => tag.trim())
   }));
 
   const filterOptions = ['All', 'Branding', 'Digital', 'Motion', 'Graphic', 'Typography', 'Generative Art', 'Aigc'];
@@ -33,16 +29,16 @@ const InspirationPage = () => {
   };
 
   // 判断文件是否为视频
-  const isVideo = (imagePath) => {
-    return imagePath.toLowerCase().endsWith('.mp4');
+  const isVideo = (filePath) => {
+    return filePath.toLowerCase().endsWith('.mp4');
   };
 
   // 渲染媒体内容（图片或视频）
   const renderMedia = (project) => {
     // 对路径进行URL编码处理，但保留斜杠
-    const encodedPath = project.image.split('/').map(segment => encodeURIComponent(segment)).join('/');
+    const encodedPath = project.cover.split('/').map(segment => encodeURIComponent(segment)).join('/');
     
-    if (isVideo(project.image)) {
+    if (isVideo(project.cover)) {
       return (
         <video
           src={encodedPath}
@@ -71,9 +67,12 @@ const InspirationPage = () => {
     }
   };
 
-  const filteredProjects = activeFilter === 'all' ? projects : projects.filter(project => 
-    project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
-  );
+  // 筛选项目
+  const filteredProjects = activeFilter === 'All' 
+    ? processedProjects 
+    : processedProjects.filter(project => 
+        project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
+      );
 
   return (
     <div className="ml-80 min-h-screen bg-dark-bg">
@@ -84,9 +83,9 @@ const InspirationPage = () => {
           {filterOptions.map((option) => (
             <button
               key={option}
-              onClick={() => setActiveFilter(option.toLowerCase())}
+              onClick={() => setActiveFilter(option)}
               className={`transition-colors duration-200 hover:opacity-80 ${
-                activeFilter === option.toLowerCase() 
+                activeFilter === option 
                   ? 'text-[#E2E2E2]' 
                   : 'text-[#787878]'
               }`}

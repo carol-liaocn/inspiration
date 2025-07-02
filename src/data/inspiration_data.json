@@ -1,0 +1,32 @@
+[
+  {
+    "id": "compotte-branding",
+    "title": "COMPOTTE BRANDING",
+    "author": "hiromasafukaji",
+    "tags": "Branding, Typography, Generative Art",
+    "cover": "/inspiration_assets/ComPotte Branding.mp4",
+    "description": "ComPotte是一个结合了数学思维力量控制电脑和精美展现的工艺的陶瓷品牌。\n\n以“计算陶器”的概念，我们使用编程技术和3D打印机，将数字表达的细致有序的美融入到我们的作品中。把数字密度塑造成真正的陶器的所有工作都是手工完成的。通过结合土和釉料等材料的吸引力，这是生产过程中的附带表达，我们正在追求一种结合数字和物理的新表达。",
+    "link": "https://www.instagram.com/p/DJ4AR8hSNYc/?img_index=1",
+    "main_asset": "/inspiration_assets/ComPotte Branding_assets/cover.mp4",
+    "assets": [
+      "/inspiration_assets/ComPotte Branding_assets/11.jpg",
+      "/inspiration_assets/ComPotte Branding_assets/12.jpg",
+      "/inspiration_assets/ComPotte Branding_assets/13.png",
+      "/inspiration_assets/ComPotte Branding_assets/14.jpg"
+    ]
+  },
+  {
+    "id": "entropy-visual-identity",
+    "title": "Entropy Visual Identity",
+    "author": "studiodumbar",
+    "tags": "Generative Art, Typography",
+    "cover": "/inspiration_assets/Entropy visual identity.mp4",
+    "description": "品牌识别设计。创建了一个自定义代码，可以生成不断扩展、自由移动的视觉元素。不同的代码用于生成独特的徽标（静态和动态）和背景元素，同时可以导入图像以创建无限多样的独特视觉效果。",
+    "link": "https://studiodumbar.com/work/entropy",
+    "main_asset": "/inspiration_assets/entropy-visual-identity_assets/cover.mp4",
+    "assets": [
+      "/inspiration_assets/entropy-visual-identity_assets/11.jpeg",
+      "/inspiration_assets/entropy-visual-identity_assets/12.mp4"
+    ]
+  }
+]
