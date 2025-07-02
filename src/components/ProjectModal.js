@@ -46,27 +46,16 @@ const ProjectModal = ({ project, onClose }) => {
     }
   };
 
-  // 随机分配图片到两栏，并决定是否跨两列
-  const generateMasonryLayout = (assets) => {
-    const layoutItems = [];
-    
-    assets.forEach((asset, index) => {
-      // 随机决定是否为大图（跨两列）
-      const isLargeImage = Math.random() < 0.3; // 30%概率为大图
-      
-      layoutItems.push({
-        src: asset,
-        id: `asset-${index}`,
-        isLarge: isLargeImage,
-        // 随机高度比例（仅用于小图）
-        aspectRatio: isLargeImage ? '3/2' : ['1/1', '4/3', '3/4'][Math.floor(Math.random() * 3)]
-      });
-    });
-    
-    return layoutItems;
+  // 处理assets数组，所有图片都是单列显示
+  const processAssets = (assets) => {
+    return assets.map((asset, index) => ({
+      src: asset,
+      id: `asset-${index}`,
+      aspectRatio: '1/1' // 统一使用1:1正方形比例
+    }));
   };
 
-  const masonryItems = project.assets ? generateMasonryLayout(project.assets) : [];
+  const assetItems = project.assets ? processAssets(project.assets) : [];
 
   return (
     <div 
@@ -97,14 +86,11 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
               )}
               
-              {/* Additional assets in masonry layout */}
-              {masonryItems.map((item) => (
+              {/* Additional assets in two-column layout */}
+              {assetItems.map((item) => (
                 <div 
                   key={item.id}
-                  className={`bg-design-gray ${item.isLarge ? 'col-span-2' : ''}`}
-                  style={{ 
-                    aspectRatio: item.aspectRatio 
-                  }}
+                  className="bg-design-gray aspect-square"
                 >
                   {renderMedia(item.src, `${project.title} asset`)}
                 </div>
