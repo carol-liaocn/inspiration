@@ -230,7 +230,10 @@ min-height: 0; /* 允许收缩 */
 /* 可滚动区域 */
 height: 100%;
 overflow-y: auto; /* 垂直滚动 */
-padding: 1rem (16px);
+padding-top: 1rem (16px);
+padding-right: 1rem (16px);
+padding-bottom: 1rem (16px);
+padding-left: 0; /* 无左边距 */
 min-height: 0; /* 允许收缩 */
 scrollbar-width: none; /* Firefox隐藏滚动条 */
 -ms-overflow-style: none; /* IE/Edge隐藏滚动条 */
