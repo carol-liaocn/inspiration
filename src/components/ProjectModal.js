@@ -66,7 +66,7 @@ const ProjectModal = ({ project, onClose }) => {
         {/* Left side - Image Gallery */}
         <div className="w-[70%] bg-design-yellow min-h-0" style={{ paddingLeft: '1.2%' }}>
           {/* Scrollable image grid */}
-          <div className="h-full overflow-y-auto min-h-0 scrollbar-hide" style={{ paddingTop: '1rem', paddingRight: '1rem', paddingBottom: '1rem', paddingLeft: '0' }}>
+          <div className="h-full overflow-y-auto min-h-0 scrollbar-hide" style={{ paddingTop: '0', paddingRight: '1rem', paddingBottom: '1rem', paddingLeft: '0' }}>
             <div className="grid grid-cols-2 gap-4">
               {/* First image - spans two columns */}
               <div className="col-span-2 aspect-[3/2] bg-design-gray">
