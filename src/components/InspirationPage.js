@@ -1,66 +1,21 @@
 import React, { useState } from 'react';
 import ProjectModal from './ProjectModal';
+import inspirationProjects from '../data/inspiration_projects.json';
 
 const InspirationPage = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
 
-  const projects = [
-    {
-      id: 1,
-      title: '案例名称位置',
-      image: '/images/project1.jpg',
-      tags: ['Branding', 'Typography', 'Generative Art'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    },
-    {
-      id: 2,
-      title: '案例名称位置',
-      image: '/images/project2.jpg',
-      tags: ['Branding', 'Digital', 'Motion'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    },
-    {
-      id: 3,
-      title: '案例名称位置',
-      image: '/images/project3.jpg',
-      tags: ['Typography', 'Graphic', 'Aigc'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    },
-    {
-      id: 4,
-      title: '案例名称位置',
-      image: '/images/project4.jpg',
-      tags: ['Branding', 'Typography', 'Generative Art'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    },
-    {
-      id: 5,
-      title: '案例名称位置',
-      image: '/images/project5.jpg',
-      tags: ['Digital', 'Motion', 'Graphic'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    },
-    {
-      id: 6,
-      title: '案例名称位置',
-      image: '/images/project6.jpg',
-      tags: ['Typography', 'Generative Art', 'Aigc'],
-      description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
-      author: 'studiodumbar',
-      link: 'https://studiodumbar.com/work/openai'
-    }
-  ];
+  // 从JSON数据创建项目列表，添加id和默认的描述、作者、链接信息
+  const projects = inspirationProjects.map((project, index) => ({
+    id: index + 1,
+    title: project.title,
+    image: project.image,
+    tags: project.tags,
+    description: 'OPENAI开发者日的新视觉体系，通过创意编程实现有机的动效设计，诠释OPENAI连接人类与科技的使命。\n\n我们尊重 OpenAI 令人耳目一新的对现实的追求，并通过设计、动效和创意编码项目来支持这种真实性。',
+    author: 'studiodumbar',
+    link: 'https://studiodumbar.com/work/openai'
+  }));
 
   const filterOptions = ['All', 'Branding', 'Digital', 'Motion', 'Graphic', 'Typography', 'Generative Art', 'Aigc'];
 
@@ -69,6 +24,7 @@ const InspirationPage = () => {
       'Branding': 'bg-design-green',
       'Typography': 'bg-design-yellow',
       'Generative Art': 'bg-design-purple',
+      'Generatve art': 'bg-design-purple', // 兼容JSON中的拼写
       'Motion': 'bg-orange-500',
       'Digital': 'bg-cyan-500',
       'Graphic': 'bg-pink-500',
@@ -77,8 +33,49 @@ const InspirationPage = () => {
     return colors[tag] || 'bg-gray-500';
   };
 
+  // 判断文件是否为视频
+  const isVideo = (imagePath) => {
+    return imagePath.toLowerCase().endsWith('.mp4');
+  };
+
+  // 渲染媒体内容（图片或视频）
+  const renderMedia = (project) => {
+    if (isVideo(project.image)) {
+      return (
+        <video
+          src={project.image}
+          autoPlay
+          loop
+          muted
+          className="object-cover object-center w-full h-[300px] rounded-xl"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentNode.style.backgroundColor = '#D9D9D9';
+          }}
+        />
+      );
+    } else {
+      return (
+        <img
+          src={project.image}
+          alt={project.title}
+          className="object-cover object-center w-full h-[300px] rounded-xl"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentNode.style.backgroundColor = '#D9D9D9';
+          }}
+        />
+      );
+    }
+  };
+
   const filteredProjects = activeFilter === 'all' ? projects : projects.filter(project => 
-    project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
+    project.tags.some(tag => {
+      // 处理"Generative Art"和"Generatve art"的匹配
+      const normalizedTag = tag.toLowerCase().replace(/generatve/, 'generative');
+      const normalizedFilter = activeFilter.toLowerCase().replace(/generative art/, 'generative art');
+      return normalizedTag === normalizedFilter;
+    })
   );
 
   return (
@@ -114,15 +111,7 @@ const InspirationPage = () => {
                 onClick={() => setSelectedProject(project)}
               >
                 <div className="aspect-[4/5] bg-design-gray rounded-xl overflow-hidden mb-6 group-hover:opacity-80 transition-opacity">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.parentNode.style.backgroundColor = '#D9D9D9';
-                    }}
-                  />
+                  {renderMedia(project)}
                 </div>
                 <h3 className="text-light-gray text-3xl font-medium mb-2.5 group-hover:opacity-80 transition-opacity uppercase">
                   {project.title}

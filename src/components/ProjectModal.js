@@ -7,6 +7,42 @@ const ProjectModal = ({ project, onClose }) => {
     }
   };
 
+  // 判断文件是否为视频
+  const isVideo = (imagePath) => {
+    return imagePath.toLowerCase().endsWith('.mp4');
+  };
+
+  // 渲染媒体内容（图片或视频）
+  const renderMedia = (src, alt, className = "w-full h-full object-cover") => {
+    if (isVideo(src)) {
+      return (
+        <video
+          src={src}
+          autoPlay
+          loop
+          muted
+          className={className}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentNode.style.backgroundColor = '#D9D9D9';
+          }}
+        />
+      );
+    } else {
+      return (
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentNode.style.backgroundColor = '#D9D9D9';
+          }}
+        />
+      );
+    }
+  };
+
   return (
     <div 
       className="fixed inset-0 bg-dark-bg bg-opacity-80 flex items-center justify-center z-50"
@@ -28,40 +64,16 @@ const ProjectModal = ({ project, onClose }) => {
         <div className="w-[70%] bg-design-yellow flex flex-col p-4" style={{ paddingLeft: '1.2%' }}>
           {/* Main large image */}
           <div className="aspect-[3/2] bg-design-gray mb-4">
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentNode.style.backgroundColor = '#D9D9D9';
-              }}
-            />
+            {renderMedia(project.image, project.title)}
           </div>
           
           {/* Two smaller images below */}
           <div className="flex gap-4">
             <div className="w-1/2 aspect-square bg-design-gray">
-              <img
-                src={`${project.image}?variant=2`}
-                alt={`${project.title} variant 2`}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentNode.style.backgroundColor = '#D9D9D9';
-                }}
-              />
+              {renderMedia(`${project.image}?variant=2`, `${project.title} variant 2`)}
             </div>
             <div className="w-1/2 aspect-square bg-design-gray">
-              <img
-                src={`${project.image}?variant=3`}
-                alt={`${project.title} variant 3`}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentNode.style.backgroundColor = '#D9D9D9';
-                }}
-              />
+              {renderMedia(`${project.image}?variant=3`, `${project.title} variant 3`)}
             </div>
           </div>
         </div>
@@ -70,7 +82,7 @@ const ProjectModal = ({ project, onClose }) => {
         <div className="w-[30%] py-12 bg-design-yellow text-dark-bg relative flex flex-col" style={{ paddingRight: '1.2%' }}>
 
           <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2 uppercase">openai — devday</h2>
+            <h2 className="text-3xl font-bold mb-2 uppercase">{project.title}</h2>
             <p className="text-2xl font-medium">by {project.author}</p>
           </div>
 
