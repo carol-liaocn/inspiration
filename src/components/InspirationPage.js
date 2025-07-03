@@ -13,7 +13,7 @@ const InspirationPage = () => {
     tags: project.tags.split(',').map(tag => tag.trim())
   }));
 
-  const filterOptions = ['All', 'Branding', 'Digital', 'Motion', 'Graphic', 'Typography', 'Generative Art', 'Aigc'];
+  const filterOptions = ['All', 'Branding', 'Digital', 'Motion', 'Graphic', 'Typography', 'Generative Art', 'AIGC'];
 
   const getTagColor = (tag) => {
     const colors = {
@@ -23,7 +23,7 @@ const InspirationPage = () => {
       'Motion': 'bg-orange-500',
       'Digital': 'bg-cyan-500',
       'Graphic': 'bg-pink-500',
-      'Aigc': 'bg-red-500'
+      'AIGC': 'bg-red-500'
     };
     return colors[tag] || 'bg-gray-500';
   };

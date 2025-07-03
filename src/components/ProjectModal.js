@@ -46,9 +46,12 @@ const ProjectModal = ({ project, onClose }) => {
     }
   };
 
-  // 处理assets数组，所有图片都是单列显示
+  // 处理assets字符串，转换为数组并处理显示
   const processAssets = (assets) => {
-    return assets.map((asset, index) => ({
+    if (!assets) return [];
+    // 将分号分隔的字符串转换为数组，并去除空格
+    const assetArray = assets.split(';').map(asset => asset.trim()).filter(asset => asset);
+    return assetArray.map((asset, index) => ({
       src: asset,
       id: `asset-${index}`,
       aspectRatio: '1/1' // 统一使用1:1正方形比例
