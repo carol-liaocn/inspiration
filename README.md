@@ -1,6 +1,68 @@
 # 设计友好报 - 网页版
 
-基于 React + Tailwind CSS 构建的设计作品展示网站，完全复现 Figma 设计文件的视觉效果。
+基于 React + Three.js + Tailwind CSS 构建的设计作品展示网站，完全复现 Figma 设计文件的视觉效果。
+
+## 🎯 **最新开发里程碑 | homepage-threejs-complete** *(2025.01.04)*
+
+### 🌟 Three.js 交互式首页完整实现
+- **3D立方体球体动画**: 基于Three.js构建的沉浸式3D球体，由多个立方体组成
+- **完整交互系统**:
+  - 🖱️ **鼠标拖拽旋转**: 按住左键拖拽控制球体视角，松开恢复自动旋转
+  - 🎯 **点击切换贴图**: 点击页面任意位置随机切换球体材质贴图
+  - ⚡ **高速破裂效果**: 快速移动鼠标触发立方体破裂动画
+  - 🎨 **立方体翻转**: 鼠标悬停时立方体实时翻转和拖尾效果
+- **媒体资源支持**: 自动扫描并支持 JPG、PNG、GIF、WEBP、MP4、WEBM、MOV 格式
+- **视频贴图优化**: 自动静音、循环播放、实时贴图更新
+- **性能优化**: 
+  - 启用抗锯齿渲染
+  - 自适应设备像素比
+  - 动态帧率调整（拖拽时60fps，静止时30fps）
+  - 完整的资源清理机制
+
+### 🎨 首页UI完美复现
+- **导航栏统一**: 左侧导航栏与其他页面完全一致
+  - 字体大小、位置、颜色完全匹配
+  - 透明背景设计，无深灰色背景
+  - 使用标准Tailwind CSS类，确保一致性
+- **REDesign Logo集成**: 
+  - 加载并显示`/images/redesign-logo.svg`
+  - Logo高度24px，与"设计友好报"文字高度一致
+  - 位置完美对应：上边距32px，右边距32px
+  - CSS滤镜处理为白色，保持视觉一致性
+- **3D球体完美居中**: 
+  - 全屏居中布局，不受导航栏影响
+  - 使用`position: fixed`和`flexbox`居中
+  - 响应式设计，适配不同屏幕尺寸
+
+### 🔧 技术架构升级
+- **Three.js集成**: 
+  - PerspectiveCamera，FOV 75°，位置 z=3
+  - 立方体球体几何体，64x64分段级别细节
+  - MeshBasicMaterial + 动态贴图系统
+  - AmbientLight (0.6) + DirectionalLight (0.8)
+- **React Hooks优化**: 
+  - 修复所有ESLint依赖警告
+  - 正确的useCallback依赖管理
+  - 性能优化的渲染循环
+  - 内存泄漏防护机制
+- **媒体管理系统**: 
+  - 自动媒体文件扫描
+  - 动态贴图加载和缓存
+  - 视频元素隐藏优化
+  - 支持混合媒体格式
+
+### 🚀 部署状态
+- **开发服务器**: `http://localhost:3002`
+- **网络访问**: `http://10.23.88.171:3002`
+- **编译状态**: ✅ 无警告编译成功
+- **功能验证**: ✅ 所有交互功能正常
+
+### 📱 响应式支持
+- **桌面端**: 完整3D交互体验
+- **移动端**: 支持触控事件，自适应布局
+- **高DPI屏幕**: SVG图标清晰显示，GPU加速优化
+
+---
 
 ## 🎯 **开发里程碑 | inspiration-assets-done** *(2025.01.03)*
 
@@ -20,13 +82,14 @@
 - **响应式交互**: 筛选器状态切换、悬浮效果、空状态处理
 
 ### 🔗 导航系统完整性
-- **三页面完整工作**: Inspiration ✅ | Artist ✅ | Team Project ✅
-- **路由系统恢复**: App.js 中完整的页面路由和组件导入
-- **侧边栏导航**: Sidebar.js 中三个导航选项完全正常
+- **四页面完整工作**: Home ✅ | Inspiration ✅ | Artist ✅ | Team Project ✅
+- **路由系统优化**: App.js 中完整的页面路由和组件导入
+- **智能布局**: 首页使用专用布局，其他页面保持标准侧边栏布局
+- **返回首页**: 在任何页面点击"设计友好报"logo可返回首页
 
 ### 🏷️ Git标签管理
-- **当前标签**: `inspiration-assets-done` - 标记资源重组和ArtistPage恢复完成
-- **历史标签**: `UI-demo-done`, `artist-done`, `inspiration-done`
+- **当前标签**: `homepage-threejs-complete` - 标记Three.js首页和UI优化完成
+- **历史标签**: `inspiration-assets-done`, `UI-demo-done`, `artist-done`, `inspiration-done`
 - **版本控制**: 完整的提交历史和开发进度追踪
 
 ## 🎨 最新设计更新（已完成）
@@ -86,13 +149,22 @@
 ## 功能特性
 
 ### 🎮 核心功能
-- **固定侧边导航栏**: 包含 Inspiration、Artist、Team Project 三个页面切换
+- **3D交互式首页**: 
+  - Three.js 立方体球体动画
+  - 鼠标拖拽旋转控制
+  - 点击切换动态贴图
+  - 高速鼠标破裂效果
+  - 自动媒体文件扫描和加载
+- **智能导航系统**: 
+  - 首页专用布局（无侧边栏背景）
+  - 其他页面标准侧边栏布局
+  - 点击logo返回首页功能
 - **Inspiration 页面**: 
   - 三栏网格布局展示设计案例
   - 智能筛选器系统，支持实时过滤
   - 项目详情弹窗
-- **Artist 页面**: 展示艺术家作品集（待完善）
-- **Team Project 页面**: 展示团队项目（待完善）
+- **Artist 页面**: 25位艺术家作品集，8种分类筛选
+- **Team Project 页面**: 团队项目展示
 
 ### 🔍 智能筛选系统
 - **多类别筛选**: All, Branding, Digital, Motion, Graphic, Typography, Generative Art, AIGC
@@ -141,11 +213,29 @@
 
 ## 技术栈
 
+### 🎨 前端框架
 - **React 18**: 现代 Hooks 和组件化架构
+- **Three.js 0.178.0**: 3D图形渲染引擎，用于交互式首页球体
 - **Tailwind CSS 3**: 自定义颜色系统和工具类
+
+### 🌐 样式和字体
 - **Inter 字体**: Google Fonts 集成
 - **CSS Grid & Flexbox**: 精确的布局控制
-- **React State Management**: useState hooks 管理状态
+- **CSS 滤镜**: SVG图标颜色处理
+
+### 🔧 状态管理和性能
+- **React State Management**: useState、useRef、useCallback hooks
+- **Three.js 优化**: 
+  - 抗锯齿渲染
+  - 动态帧率调整
+  - 资源清理机制
+  - GPU 加速优化
+
+### 📁 媒体处理
+- **视频支持**: MP4、WEBM、MOV 格式
+- **图片支持**: JPG、PNG、GIF、WEBP 格式
+- **VideoTexture**: Three.js 视频贴图实时渲染
+- **自动媒体扫描**: 动态加载 /public/inspiration_assets/ 资源
 
 ## 🚀 快速开始
 
@@ -153,16 +243,125 @@
    ```bash
    npm install
    ```
+   主要依赖包含：
+   - React 18.2.0
+   - Three.js 0.178.0
+   - Tailwind CSS 3.1.6
 
 2. **启动开发服务器**
    ```bash
    npm start
    ```
+   如果端口3000被占用，系统会询问是否使用其他端口
 
 3. **在浏览器中访问**
    ```
-   http://localhost:3000
+   http://localhost:3000   (或系统分配的其他端口)
+   http://localhost:3002   (当前开发环境)
    ```
+
+4. **体验完整功能**
+   - 🏠 **首页**: 3D交互球体，拖拽旋转，点击切换贴图
+   - 🎨 **Inspiration**: 设计案例展示，筛选器功能
+   - 👨‍🎨 **Artist**: 艺术家作品集浏览
+   - 👥 **Team Project**: 团队项目展示
+
+### 🎮 交互指南
+- **首页3D球体**:
+  - 拖拽鼠标左键旋转球体
+  - 点击页面任意位置切换贴图
+  - 快速移动鼠标触发破裂效果
+- **页面导航**:
+  - 点击左侧导航按钮切换页面
+  - 点击"设计友好报"logo返回首页
+
+## 📁 项目结构
+
+```
+设计友好报-网页版/
+├── public/
+│   ├── images/
+│   │   └── redesign-logo.svg          # REDesign Logo
+│   ├── inspiration_assets/             # 设计案例资源
+│   │   ├── ComPotte Branding_assets/
+│   │   ├── entropy-visual-identity_assets/
+│   │   └── ...                        # 其他案例资源文件夹
+│   └── team_project/                   # 团队项目资源
+├── src/
+│   ├── components/
+│   │   ├── home/
+│   │   │   ├── HomePage.js            # 首页组件
+│   │   │   ├── HomePage.css           # 首页样式
+│   │   │   ├── RotatingSphere.js      # Three.js 3D球体组件
+│   │   │   └── README.md              # 首页技术文档
+│   │   ├── ArtistPage.js              # 艺术家页面
+│   │   ├── InspirationPage.js         # 设计案例页面
+│   │   ├── TeamProjectPage.js         # 团队项目页面
+│   │   ├── ProjectModal.js            # 项目详情弹窗
+│   │   └── Sidebar.js                 # 侧边导航栏
+│   ├── data/
+│   │   ├── artist_data.json           # 艺术家数据
+│   │   ├── inspiration_data.json      # 设计案例数据
+│   │   ├── team_project_data.json     # 团队项目数据
+│   │   └── mediaList.json             # 3D球体贴图媒体列表
+│   ├── App.js                         # 主应用组件
+│   ├── index.js                       # 应用入口
+│   └── index.css                      # 全局样式
+├── tailwind.config.js                 # Tailwind CSS 配置
+└── package.json                       # 项目依赖
+```
+
+### 🔑 核心文件说明
+- **`RotatingSphere.js`**: 1100+行的Three.js核心组件，包含完整的3D交互逻辑
+- **`HomePage.js`**: 首页布局组件，集成3D球体和导航
+- **`App.js`**: 路由管理，智能布局切换
+- **`mediaList.json`**: 自动生成的媒体文件索引
+- **`inspiration_data.json`**: 设计案例完整数据结构
+
+## ⚡ 性能优化和兼容性
+
+### 🚀 性能特性
+- **动态帧率**: 根据交互状态调整帧率（拖拽60fps，静止30fps）
+- **GPU加速**: 使用`will-change`和`transform3d`优化渲染
+- **资源管理**: 自动清理Three.js资源，防止内存泄漏
+- **懒加载**: 媒体文件按需加载，减少初始加载时间
+- **抗锯齿**: 智能抗锯齿，在性能和质量间平衡
+
+### 🌐 浏览器兼容性
+| 浏览器 | 支持状态 | 备注 |
+|--------|----------|------|
+| Chrome 90+ | ✅ 完全支持 | 推荐浏览器，最佳性能 |
+| Firefox 85+ | ✅ 完全支持 | 完整功能支持 |
+| Safari 14+ | ✅ 支持 | 视频可能需要用户手势激活 |
+| Edge 90+ | ✅ 完全支持 | Chromium内核完整支持 |
+
+### 📱 设备支持
+- **桌面端**: 完整3D交互体验
+- **平板**: 支持触控操作，性能良好
+- **手机**: 基础3D功能，建议使用桌面端获得最佳体验
+
+## 🛠️ 开发注意事项
+
+### 📋 开发环境要求
+- Node.js 16.0+ 
+- npm 8.0+
+- 现代浏览器支持ES6+
+
+### ⚠️ 已知问题和解决方案
+1. **端口冲突**: 如遇端口3000被占用，选择其他端口即可
+2. **Three.js内存**: 长时间使用后可能出现内存占用，刷新页面即可恢复
+3. **视频加载**: 某些格式视频在Safari中可能需要用户交互才能播放
+4. **高DPI屏幕**: SVG图标已优化，确保高分辨率下清晰显示
+
+### 🔧 调试技巧
+- 打开浏览器控制台查看Three.js加载日志
+- 使用`console.log`输出已加载的媒体文件列表
+- 性能监控：F12 → Performance 标签页分析渲染性能
+
+---
+
+*最后更新: 2025.01.04*
+*开发团队: 设计友好报团队*
 
 ## 📝 弹窗开发记录（2024.12.19 完整版）
 

@@ -9,7 +9,8 @@ const ProjectModal = ({ project, onClose }) => {
 
   // 判断文件是否为视频
   const isVideo = (imagePath) => {
-    return imagePath.toLowerCase().endsWith('.mp4');
+    const videoExtensions = ['.mp4', '.webm', '.mov', '.avi'];
+    return videoExtensions.some(ext => imagePath.toLowerCase().endsWith(ext));
   };
 
   // 渲染媒体内容（图片或视频）
@@ -46,12 +47,12 @@ const ProjectModal = ({ project, onClose }) => {
     }
   };
 
-  // 处理assets字符串，转换为数组并处理显示
-  const processAssets = (assets) => {
-    if (!assets) return [];
-    // 将分号分隔的字符串转换为数组，并去除空格
-    const assetArray = assets.split(';').map(asset => asset.trim()).filter(asset => asset);
-    return assetArray.map((asset, index) => ({
+  // 处理assets字符串，将分号分隔的字符串转换为数组
+  const processAssets = (assetsString) => {
+    if (!assetsString) return [];
+    // 分割字符串并去除空格
+    const assetsArray = assetsString.split(';').map(asset => asset.trim()).filter(asset => asset);
+    return assetsArray.map((asset, index) => ({
       src: asset,
       id: `asset-${index}`,
       aspectRatio: '1/1' // 统一使用1:1正方形比例
@@ -127,15 +128,33 @@ const ProjectModal = ({ project, onClose }) => {
           </div>
 
           <div className="text-left">
-            <a 
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-dark-bg font-medium underline hover:no-underline"
-              style={{ fontSize: '0.875rem' }}
-            >
-              {project.link}
-            </a>
+            
+{Array.isArray(project.link) ? (
+  project.link.map((url, index) => (
+    <div key={index}>
+      <a 
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-dark-bg font-medium underline hover:no-underline block"
+        style={{ fontSize: '0.875rem' }}
+      >
+        {url}
+      </a>
+    </div>
+  ))
+) : (
+  <a 
+    href={project.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-dark-bg font-medium underline hover:no-underline"
+    style={{ fontSize: '0.875rem' }}
+  >
+    {project.link}
+  </a>
+)}
+
           </div>
         </div>
       </div>

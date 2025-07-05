@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import ProjectModal from './ProjectModal';
+import LazyMedia from './LazyMedia';
+import LoadingSpinner from './LoadingSpinner';
+import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import inspirationData from '../data/inspiration_data.json';
 
 const InspirationPage = () => {
@@ -7,11 +10,34 @@ const InspirationPage = () => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   // 处理标签字符串，转换为数组
-  const processedProjects = inspirationData.map(project => ({
-    ...project,
-    // 将tags字符串分割为数组，并去除空格
-    tags: project.tags.split(',').map(tag => tag.trim())
-  }));
+  const processedProjects = useMemo(() => 
+    inspirationData.map(project => ({
+      ...project,
+      // 将tags字符串分割为数组，并去除空格
+      tags: project.tags.split(',').map(tag => tag.trim())
+    })), []);
+
+  // 筛选项目
+  const filteredProjects = useMemo(() => 
+    activeFilter === 'All' 
+      ? processedProjects 
+      : processedProjects.filter(project => 
+          project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
+        ), [activeFilter, processedProjects]);
+
+  // 使用无限滚动Hook
+  const {
+    displayedItems: displayedProjects,
+    isLoading,
+    hasMore,
+    lastItemRef,
+    reset
+  } = useInfiniteScroll(filteredProjects, 9); // 每次加载9个项目
+
+  // 当筛选条件改变时重置
+  React.useEffect(() => {
+    reset();
+  }, [activeFilter, reset]);
 
   const filterOptions = ['All', 'Branding', 'Digital', 'Motion', 'Graphic', 'Typography', 'Generative Art', 'AIGC'];
 
@@ -28,51 +54,10 @@ const InspirationPage = () => {
     return colors[tag] || 'bg-gray-500';
   };
 
-  // 判断文件是否为视频
-  const isVideo = (filePath) => {
-    return filePath.toLowerCase().endsWith('.mp4');
+  // 处理URL编码
+  const getEncodedPath = (path) => {
+    return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
   };
-
-  // 渲染媒体内容（图片或视频）
-  const renderMedia = (project) => {
-    // 对路径进行URL编码处理，但保留斜杠
-    const encodedPath = project.cover.split('/').map(segment => encodeURIComponent(segment)).join('/');
-    
-    if (isVideo(project.cover)) {
-      return (
-        <video
-          src={encodedPath}
-          autoPlay
-          loop
-          muted
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.parentNode.style.backgroundColor = '#D9D9D9';
-          }}
-        />
-      );
-    } else {
-      return (
-        <img
-          src={encodedPath}
-          alt={project.title}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.parentNode.style.backgroundColor = '#D9D9D9';
-          }}
-        />
-      );
-    }
-  };
-
-  // 筛选项目
-  const filteredProjects = activeFilter === 'All' 
-    ? processedProjects 
-    : processedProjects.filter(project => 
-        project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
-      );
 
   return (
     <div className="ml-80 min-h-screen bg-dark-bg">
@@ -98,33 +83,65 @@ const InspirationPage = () => {
 
       {/* Projects Grid */}
       <div className="px-8 pb-8">
-        {filteredProjects.length > 0 ? (
-          <div className="grid grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <div
-                key={project.id}
-                className="cursor-pointer group"
-                onClick={() => setSelectedProject(project)}
-              >
-                <div className="aspect-[4/5] bg-design-gray rounded-xl overflow-hidden mb-6 group-hover:opacity-80 transition-opacity">
-                  {renderMedia(project)}
+        {displayedProjects.length > 0 ? (
+          <>
+            <div className="grid grid-cols-3 gap-6">
+              {displayedProjects.map((project, index) => (
+                <div
+                  key={project.id}
+                  ref={index === displayedProjects.length - 1 ? lastItemRef : null}
+                  className="cursor-pointer group"
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <div className="aspect-[4/5] bg-design-gray rounded-xl overflow-hidden mb-6 group-hover:opacity-80 transition-opacity">
+                    <LazyMedia
+                      src={getEncodedPath(project.cover)}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      placeholder={
+                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                          <div className="w-12 h-12 bg-gray-700 rounded-lg animate-pulse"></div>
+                        </div>
+                      }
+                    />
+                  </div>
+                  <h3 className="text-light-gray text-3xl font-medium mb-2.5 group-hover:opacity-80 transition-opacity uppercase">
+                    {project.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5 mb-8">
+                    {project.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className={`px-2 py-0.5 text-sm font-medium text-dark-bg rounded-md leading-tight ${getTagColor(tag)}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <h3 className="text-light-gray text-3xl font-medium mb-2.5 group-hover:opacity-80 transition-opacity uppercase">
-                  {project.title}
-                </h3>
-                <div className="flex flex-wrap gap-1.5 mb-8">
-                  {project.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className={`px-2 py-0.5 text-sm font-medium text-dark-bg rounded-md leading-tight ${getTagColor(tag)}`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              ))}
+            </div>
+            
+            {/* 加载更多指示器 */}
+            {isLoading && (
+              <div className="mt-8">
+                <LoadingSpinner 
+                  size="md" 
+                  text="加载更多内容..." 
+                  className="py-8"
+                />
               </div>
-            ))}
-          </div>
+            )}
+            
+            {/* 底部状态 */}
+            {!hasMore && displayedProjects.length > 0 && (
+              <div className="text-center py-8">
+                <p className="text-[#787878] text-lg">
+                  已显示全部 {displayedProjects.length} 个案例
+                </p>
+              </div>
+            )}
+          </>
         ) : (
           <div className="flex items-center justify-center h-64">
             <p className="text-[#787878] text-lg">没有找到符合条件的案例</p>

@@ -9,9 +9,12 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="fixed left-0 top-0 h-full w-80 bg-dark-bg z-10">
-      {/* Logo */}
+      {/* Logo - 点击可返回首页 */}
       <div className="px-8 py-8">
-        <div className="flex items-center">
+        <div 
+          className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => setActiveTab('home')}
+        >
           <h1 className="text-light-gray text-2xl font-bold whitespace-nowrap">
             设计友好报
           </h1>
