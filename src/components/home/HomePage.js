@@ -63,6 +63,10 @@ const HomePage = ({ activeTab, setActiveTab }) => {
           src="/images/redesign-logo.svg" 
           alt="REDesign" 
           className="h-full w-auto"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            console.log('REDesign logo loading failed');
+          }}
         />
       </div>
 
