@@ -6,11 +6,11 @@ import './HomePage.css';
 const HomePage = ({ activeTab, setActiveTab }) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  // 模拟首页加载时间，实际中可以监听RotatingSphere的加载状态
+  // 减少首页加载时间，提升用户体验
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // 2秒后隐藏loading
+    }, 800); // 0.8秒后隐藏loading，更快响应
 
     return () => clearTimeout(timer);
   }, []);
