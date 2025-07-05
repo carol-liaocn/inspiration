@@ -26,10 +26,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "src/index.js": {
-      "includeFiles": "build/**"
-    }
-  }
+  ]
 } 
