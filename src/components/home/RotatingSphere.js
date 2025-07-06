@@ -819,14 +819,31 @@ const RotatingSphere = () => {
         videoElementRef.current = null;
       }
       
+      // 先测试URL是否可访问
+      console.log('测试视频URL是否可访问:', filePath);
+      
+      // 简单的URL测试
+      const testUrl = async () => {
+        try {
+          const response = await fetch(filePath, { 
+            method: 'HEAD',
+            mode: 'no-cors' // 避免CORS问题
+          });
+          console.log('URL测试完成，开始创建视频元素');
+        } catch (error) {
+          console.warn('URL测试失败，但继续尝试加载视频:', error);
+        }
+      };
+      
+      testUrl();
+      
       const video = document.createElement('video');
       video.src = filePath;
       video.muted = true;
       video.autoplay = true;
       video.loop = true;
-      video.crossOrigin = 'anonymous';
       video.playsInline = true;
-      video.preload = 'metadata'; // 只预加载元数据，提升性能
+      video.preload = 'auto'; // 改为auto以确保完全加载
       
       video.style.display = 'none';
       document.body.appendChild(video);
@@ -839,7 +856,18 @@ const RotatingSphere = () => {
       
       const handleLoadedData = () => {
         console.log('视频贴图加载成功:', filePath);
-        video.play().catch(console.error);
+        console.log('视频详情:', {
+          duration: video.duration,
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          readyState: video.readyState
+        });
+        
+        video.play().then(() => {
+          console.log('视频播放成功');
+        }).catch((playError) => {
+          console.error('视频播放失败:', playError);
+        });
         
         // 如果立方体还没创建，则创建
         if (!cubeGroupRef.current) {
@@ -853,18 +881,45 @@ const RotatingSphere = () => {
         // 清理事件监听器
         video.removeEventListener('loadeddata', handleLoadedData);
         video.removeEventListener('error', handleError);
+        video.removeEventListener('canplaythrough', handleCanPlayThrough);
+        clearTimeout(timeoutId);
+      };
+      
+      const handleCanPlayThrough = () => {
+        console.log('视频可以流畅播放:', filePath);
+        // 有些视频可能loadeddata事件不触发，但canplaythrough会触发
+        if (video.readyState >= 3) {
+          handleLoadedData();
+        }
       };
       
       const handleError = (error) => {
-        console.error('视频贴图加载失败:', filePath, error);
+        console.error('视频贴图加载失败:', filePath);
+        console.error('错误详情:', error);
+        console.error('视频状态:', {
+          readyState: video.readyState,
+          networkState: video.networkState,
+          error: video.error
+        });
+        
         // 清理事件监听器
         video.removeEventListener('loadeddata', handleLoadedData);
         video.removeEventListener('error', handleError);
+        video.removeEventListener('canplaythrough', handleCanPlayThrough);
+        clearTimeout(timeoutId);
+        
         // 创建备用球体
         createFallbackSphere();
       };
       
+      // 添加超时机制
+      const timeoutId = setTimeout(() => {
+        console.warn('视频加载超时:', filePath);
+        handleError(new Error('视频加载超时'));
+      }, 15000); // 15秒超时
+      
       video.addEventListener('loadeddata', handleLoadedData);
+      video.addEventListener('canplaythrough', handleCanPlayThrough);
       video.addEventListener('error', handleError);
       
       return videoTexture;
