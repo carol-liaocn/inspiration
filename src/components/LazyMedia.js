@@ -59,7 +59,7 @@ const LazyMedia = ({
     return null;
   };
 
-  // 设置Intersection Observer
+  // 设置Intersection Observer - 增强懒加载策略
   useEffect(() => {
     const target = mediaRef.current;
     if (!target) return;
@@ -67,13 +67,15 @@ const LazyMedia = ({
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isInView) {
+          console.log(`开始加载媒体: ${src}`);
           setIsInView(true);
           setIsLoading(true);
         }
       },
       {
-        threshold,
-        rootMargin: '50px' // 提前50px开始加载
+        threshold: threshold || 0.1,
+        // 根据网络速度和设备性能调整预加载范围
+        rootMargin: window.navigator.connection?.effectiveType === '4g' ? '200px' : '100px'
       }
     );
 
@@ -84,7 +86,7 @@ const LazyMedia = ({
         observerRef.current.disconnect();
       }
     };
-  }, [isInView, threshold]);
+  }, [isInView, threshold, src]);
 
   // 处理预览图片加载完成
   const handlePreviewLoad = () => {
@@ -155,50 +157,69 @@ const LazyMedia = ({
     if (!isInView) return null;
 
     const isVideoFile = isVideo(src);
-    const previewUrl = isVideoFile ? getPreviewUrl(src) : null;
 
     if (isVideoFile) {
-      return (
-        <div className="relative w-full h-full">
-          {/* 预览图片层 */}
-          {previewUrl && showPreview && (
-            <img
-              src={previewUrl}
-              alt={alt}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                previewLoaded ? 'opacity-100' : 'opacity-0'
+      // 如果提供了预览图片，使用渐进式加载
+      if (previewSrc) {
+        return (
+          <div className="relative w-full h-full">
+            {/* 预览图片层 */}
+            {showPreview && (
+              <img
+                src={previewSrc}
+                alt={alt}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  previewLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={handlePreviewLoad}
+                onError={(e) => {
+                  console.log('预览图片加载失败，直接加载视频');
+                  setShowPreview(false);
+                }}
+                style={{ 
+                  display: previewLoaded ? 'block' : 'none',
+                  zIndex: showPreview ? 2 : 1
+                }}
+              />
+            )}
+            
+            {/* 视频层 */}
+            <video
+              src={src}
+              autoPlay
+              loop
+              muted
+              controls={showVideoControls}
+              className={`${className} transition-opacity duration-1000 ${
+                videoLoaded ? 'opacity-100' : 'opacity-0'
               }`}
-              onLoad={handlePreviewLoad}
-              onError={(e) => {
-                console.log('预览图片加载失败，直接加载视频');
-                setShowPreview(false);
-              }}
+              onLoadedData={handleVideoLoad}
+              onError={handleError}
               style={{ 
-                display: previewLoaded ? 'block' : 'none',
-                zIndex: showPreview ? 2 : 1
+                display: videoLoaded ? 'block' : 'none',
+                zIndex: showPreview ? 1 : 2
               }}
             />
-          )}
-          
-          {/* 视频层 */}
+          </div>
+        );
+      } else {
+        // 简化模式：直接加载视频，用于inspiration页面的cover
+        return (
           <video
             src={src}
             autoPlay
             loop
             muted
+            playsInline
             controls={showVideoControls}
-            className={`${className} transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            onLoadedData={handleVideoLoad}
+            className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
+            onLoadedData={handleLoad}
             onError={handleError}
-            style={{ 
-              display: videoLoaded ? 'block' : 'none',
-              zIndex: showPreview ? 1 : 2
-            }}
+            style={{ display: isLoaded ? 'block' : 'none' }}
+            preload="metadata" // 只预加载元数据，提升性能
           />
-        </div>
-      );
+        );
+      }
     } else {
       // 静态图片
       return (
@@ -216,7 +237,7 @@ const LazyMedia = ({
 
   return (
     <div ref={mediaRef} className={`relative ${className}`}>
-      {/* 始终显示占位符，媒体加载后淡入覆盖 */}
+      {/* 显示占位符的条件：没有任何内容加载完成时 */}
       {!isLoaded && !previewLoaded && !videoLoaded && renderPlaceholder()}
       {/* 媒体内容 */}
       {isInView && renderMedia()}
