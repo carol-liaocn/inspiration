@@ -59,6 +59,60 @@ const InspirationPage = () => {
     return path;
   };
 
+  // 获取项目的预览图片（用于视频的静态预览）
+  const getProjectPreview = (project) => {
+    // 判断文件是否为静态图片
+    const isStaticImage = (url) => {
+      if (!url) return false;
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+      return imageExtensions.some(ext => url.toLowerCase().endsWith(ext));
+    };
+
+    // 1. 首先检查main_asset是否是静态图片
+    if (project.main_asset && isStaticImage(project.main_asset)) {
+      console.log(`项目 ${project.title} 使用main_asset作为预览:`, project.main_asset);
+      return project.main_asset;
+    }
+
+    // 2. 检查assets中的第一个静态图片
+    if (project.assets) {
+      const assetsArray = project.assets.split(';').map(asset => asset.trim()).filter(asset => asset);
+      const firstStaticImage = assetsArray.find(asset => isStaticImage(asset));
+      if (firstStaticImage) {
+        console.log(`项目 ${project.title} 使用assets中的图片作为预览:`, firstStaticImage);
+        return firstStaticImage;
+      }
+    }
+
+    // 3. 如果cover是静态图片，返回null（让LazyMedia直接显示cover）
+    if (isStaticImage(project.cover)) {
+      return null;
+    }
+
+    // 4. 最后尝试根据cover路径智能生成预览图片路径
+    if (project.cover) {
+      const coverUrl = project.cover;
+      const previewPatterns = [
+        // 尝试将视频文件名替换为常见的静态图片文件名
+        { from: /\/[^\/]+\.(mp4|webm|mov)$/, to: '/cover.jpg' },
+        { from: /\/[^\/]+\.(mp4|webm|mov)$/, to: '/preview.jpg' },
+        { from: /\/([^\/]+)\.(mp4|webm|mov)$/, to: '/$1.jpg' },
+        { from: /\/([^\/]+)\.(mp4|webm|mov)$/, to: '/$1.png' }
+      ];
+
+      for (const pattern of previewPatterns) {
+        if (pattern.from.test(coverUrl)) {
+          const previewUrl = coverUrl.replace(pattern.from, pattern.to);
+          console.log(`项目 ${project.title} 尝试智能预览路径:`, previewUrl);
+          return previewUrl;
+        }
+      }
+    }
+
+    console.log(`项目 ${project.title} 没有找到合适的预览图片`);
+    return null;
+  };
+
   return (
     <div className="ml-80 min-h-screen bg-dark-bg">
       {/* Header */}
@@ -98,9 +152,11 @@ const InspirationPage = () => {
                       src={getEncodedPath(project.cover)}
                       alt={project.title}
                       className="w-full h-full object-cover"
+                      previewSrc={getProjectPreview(project)}
                       placeholder={
-                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                        <div className="w-full h-full bg-gray-800 flex flex-col items-center justify-center">
                           <div className="w-12 h-12 bg-gray-700 rounded-lg animate-pulse"></div>
+                          <div className="text-xs text-gray-400 mt-2">预加载中...</div>
                         </div>
                       }
                     />

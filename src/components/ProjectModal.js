@@ -1,4 +1,5 @@
 import React from 'react';
+import LazyMedia from './LazyMedia';
 
 const ProjectModal = ({ project, onClose }) => {
   const handleBackdropClick = (e) => {
@@ -13,35 +14,31 @@ const ProjectModal = ({ project, onClose }) => {
     return videoExtensions.some(ext => imagePath.toLowerCase().endsWith(ext));
   };
 
-  // 渲染媒体内容（图片或视频）
-  const renderMedia = (src, alt, className = "w-full h-full object-cover") => {
-    if (isVideo(src)) {
-      return (
-        <video
-          src={src}
-          autoPlay
-          loop
-          muted
-          className={className}
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.parentNode.style.backgroundColor = '#D9D9D9';
-          }}
-        />
+  // 获取预览图片（为视频文件生成静态预览）
+  const getPreviewForAsset = (assetUrl) => {
+    if (!isVideo(assetUrl)) return null;
+    
+    // 尝试根据assets中的其他文件找到对应的静态图片
+    if (project.assets) {
+      const assetsArray = project.assets.split(';').map(asset => asset.trim()).filter(asset => asset);
+      const isStaticImage = (url) => {
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+        return imageExtensions.some(ext => url.toLowerCase().endsWith(ext));
+      };
+      
+      // 寻找同目录下的静态图片
+      const assetDir = assetUrl.substring(0, assetUrl.lastIndexOf('/'));
+      const potentialPreview = assetsArray.find(asset => 
+        isStaticImage(asset) && asset.startsWith(assetDir)
       );
-    } else {
-      return (
-        <img
-          src={src}
-          alt={alt}
-          className={className}
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.parentNode.style.backgroundColor = '#D9D9D9';
-          }}
-        />
-      );
+      
+      if (potentialPreview) {
+        console.log(`为 ${assetUrl} 找到预览图片:`, potentialPreview);
+        return potentialPreview;
+      }
     }
+    
+    return null;
   };
 
   // 处理assets字符串，将分号分隔的字符串转换为数组
@@ -83,7 +80,19 @@ const ProjectModal = ({ project, onClose }) => {
               {/* Main asset - 主图，跨两列 */}
               {project.main_asset && (
                 <div className="col-span-2 aspect-[3/2] bg-design-gray">
-                  {renderMedia(project.main_asset, `${project.title} main asset`)}
+                  <LazyMedia
+                    src={project.main_asset}
+                    alt={`${project.title} main asset`}
+                    className="w-full h-full object-cover"
+                    previewSrc={getPreviewForAsset(project.main_asset)}
+                    showVideoControls={true}
+                    placeholder={
+                      <div className="w-full h-full bg-gray-800 flex flex-col items-center justify-center">
+                        <div className="w-8 h-8 bg-gray-700 rounded-lg animate-pulse"></div>
+                        <div className="text-xs text-gray-400 mt-2">加载中...</div>
+                      </div>
+                    }
+                  />
                 </div>
               )}
               
@@ -93,7 +102,19 @@ const ProjectModal = ({ project, onClose }) => {
                   key={item.id}
                   className="bg-design-gray aspect-square"
                 >
-                  {renderMedia(item.src, `${project.title} asset`)}
+                  <LazyMedia
+                    src={item.src}
+                    alt={`${project.title} asset`}
+                    className="w-full h-full object-cover"
+                    previewSrc={getPreviewForAsset(item.src)}
+                    showVideoControls={true}
+                    placeholder={
+                      <div className="w-full h-full bg-gray-800 flex flex-col items-center justify-center">
+                        <div className="w-6 h-6 bg-gray-700 rounded animate-pulse"></div>
+                        <div className="text-xs text-gray-400 mt-1">加载中...</div>
+                      </div>
+                    }
+                  />
                 </div>
               ))}
               
