@@ -54,9 +54,9 @@ const InspirationPage = () => {
     return colors[tag] || 'bg-gray-500';
   };
 
-  // 处理URL编码
+  // 不需要手动编码URL，浏览器会自动处理
   const getEncodedPath = (path) => {
-    return path.split('/').map(segment => encodeURIComponent(segment)).join('/');
+    return path;
   };
 
   return (
