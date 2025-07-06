@@ -825,6 +825,7 @@ const RotatingSphere = () => {
       // 简单的URL测试
       const testUrl = async () => {
         try {
+          // eslint-disable-next-line no-unused-vars
           const response = await fetch(filePath, { 
             method: 'HEAD',
             mode: 'no-cors' // 避免CORS问题

@@ -31,6 +31,7 @@ const LazyMedia = ({
   };
 
   // 智能生成预览图片URL（如果没有提供previewSrc）
+  // eslint-disable-next-line no-unused-vars
   const getPreviewUrl = (videoUrl) => {
     if (previewSrc) return previewSrc;
     
@@ -40,7 +41,9 @@ const LazyMedia = ({
       { from: '.mp4', to: '.png' },
       { from: '.webm', to: '.jpg' },
       { from: '.mov', to: '.jpg' },
+      // eslint-disable-next-line no-useless-escape
       { from: /\/[^\/]+\.mp4$/, to: '/cover.jpg' },
+      // eslint-disable-next-line no-useless-escape
       { from: /\/[^\/]+\.mp4$/, to: '/preview.jpg' }
     ];
     
