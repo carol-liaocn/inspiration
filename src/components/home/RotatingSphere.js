@@ -1053,11 +1053,16 @@ const RotatingSphere = () => {
 
   useEffect(() => {
     console.log('组件初始化开始...');
+    console.log('mediaList长度:', mediaList.length);
+    console.log('mediaList内容:', mediaList);
     
     // 初始化Three.js
     const { scene, renderer, mountElement } = initThreeJS();
     
-    if (!renderer || !mountElement) return;
+    if (!renderer || !mountElement) {
+      console.error('Three.js初始化失败');
+      return;
+    }
     
     // 添加事件监听器
     const canvas = renderer.domElement;
@@ -1069,6 +1074,14 @@ const RotatingSphere = () => {
     
     // 开始动画
     animate();
+    
+    // 强制创建备用球体作为后备
+    setTimeout(() => {
+      if (!cubeGroupRef.current) {
+        console.log('5秒后仍无球体，强制创建备用球体');
+        createFallbackSphere();
+      }
+    }, 5000);
     
     // 加载初始贴图
     if (mediaList.length > 0) {

@@ -60,7 +60,7 @@ const HomePage = ({ activeTab, setActiveTab }) => {
       {/* 右上角REDesign标志 */}
       <div className={`redesign-logo transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         <img 
-          src={`${process.env.PUBLIC_URL}/images/redesign-logo.svg`}
+          src="./images/redesign-logo.svg"
           alt="REDesign" 
           className="h-full w-auto"
           onError={(e) => {
