@@ -167,16 +167,18 @@ const RotatingSphere = () => {
   );
 
   // 创建立方体几何体和材质
-  const createCubeMaterials = useCallback((videoTexture, uv) => {
-    // 为每个立方体创建独特的贴图材质（正面）
-    const frontMaterial = new THREE.MeshBasicMaterial({
-      map: videoTexture ? videoTexture.clone() : null,
-      transparent: true,
-      opacity: 1.0,
-    });
+  const createCubeMaterials = useCallback((videoTexture, uv, fallbackMaterial = null) => {
+    let frontMaterial;
     
-    // 设置UV偏移，让每个立方体显示贴图的不同部分
-    if (frontMaterial.map) {
+    if (videoTexture) {
+      // 有视频贴图时，使用视频贴图
+      frontMaterial = new THREE.MeshBasicMaterial({
+        map: videoTexture.clone(),
+        transparent: true,
+        opacity: 1.0,
+      });
+      
+      // 设置UV偏移，让每个立方体显示贴图的不同部分
       frontMaterial.map.wrapS = THREE.RepeatWrapping;
       frontMaterial.map.wrapT = THREE.RepeatWrapping;
       
@@ -185,6 +187,16 @@ const RotatingSphere = () => {
       frontMaterial.map.repeat.set(uvSize, uvSize);
       frontMaterial.map.offset.set(uv.u * (1 - uvSize), uv.v * (1 - uvSize));
       frontMaterial.map.needsUpdate = true;
+    } else if (fallbackMaterial) {
+      // 使用备用材质
+      frontMaterial = fallbackMaterial.clone();
+    } else {
+      // 没有任何贴图时，使用默认黄色
+      frontMaterial = new THREE.MeshBasicMaterial({
+        color: 0xFFD700,
+        transparent: true,
+        opacity: 1.0,
+      });
     }
     
     return [
@@ -198,8 +210,8 @@ const RotatingSphere = () => {
   }, [yellowMaterials]);
 
   // 初始化立方体球体
-  const initCubeSphere = useCallback((radius, videoTexture) => {
-    console.log('初始化立方体球体...');
+  const initCubeSphere = useCallback((radius, videoTexture, fallbackMaterial = null) => {
+    console.log('初始化立方体球体...', { hasVideoTexture: !!videoTexture, hasFallbackMaterial: !!fallbackMaterial });
     
     // 清理之前的立方体
     if (cubeGroupRef.current) {
@@ -215,7 +227,7 @@ const RotatingSphere = () => {
     
     positions.forEach((position, index) => {
       // 为每个立方体创建独特的材质
-      const materials = createCubeMaterials(videoTexture, uvCoords[index]);
+      const materials = createCubeMaterials(videoTexture, uvCoords[index], fallbackMaterial);
       
       // 创建立方体（使用共享几何体）
       const cube = new THREE.Mesh(sharedCubeGeometry, materials);
@@ -767,9 +779,31 @@ const RotatingSphere = () => {
     return { scene, camera, renderer, mountElement };
   }, []);
 
+  // 创建备用球体（无贴图）
+  const createFallbackSphere = useCallback(() => {
+    console.log('创建备用球体...');
+    const sphereRadius = calculateSphereSize();
+    
+    // 创建简单的黄色材质
+    const fallbackMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0xFFD700,
+      transparent: true,
+      opacity: 0.8
+    });
+    
+    initCubeSphere(sphereRadius, null, fallbackMaterial);
+  }, [calculateSphereSize, initCubeSphere]);
+
   // 加载并应用贴图
   const loadAndApplyTexture = useCallback((filePath) => {
     console.log('尝试加载贴图:', filePath);
+    
+    if (!filePath) {
+      console.log('没有提供文件路径，创建备用球体');
+      createFallbackSphere();
+      return;
+    }
+    
     const extension = filePath.split('.').pop().toLowerCase();
     
     if (['mp4', 'webm', 'mov'].includes(extension)) {
@@ -826,6 +860,8 @@ const RotatingSphere = () => {
         // 清理事件监听器
         video.removeEventListener('loadeddata', handleLoadedData);
         video.removeEventListener('error', handleError);
+        // 创建备用球体
+        createFallbackSphere();
       };
       
       video.addEventListener('loadeddata', handleLoadedData);
@@ -854,12 +890,14 @@ const RotatingSphere = () => {
         },
         (error) => {
           console.error('图片贴图加载失败:', filePath, error);
+          // 创建备用球体
+          createFallbackSphere();
         }
       );
       
       return texture;
     }
-  }, [calculateSphereSize, initCubeSphere, updateCubeTextures]);
+  }, [calculateSphereSize, initCubeSphere, updateCubeTextures, createFallbackSphere]);
 
   // 切换贴图（添加防抖机制）
   const switchTexture = useCallback(() => {
@@ -1041,6 +1079,11 @@ const RotatingSphere = () => {
       setTimeout(() => {
         loadAndApplyTexture(mediaList[randomIndex]);
       }, 100);
+    } else {
+      console.log('媒体列表为空，创建备用球体');
+      setTimeout(() => {
+        createFallbackSphere();
+      }, 100);
     }
     
     // 清理函数
@@ -1088,7 +1131,7 @@ const RotatingSphere = () => {
       });
       cubesDataRef.current = [];
     };
-  }, [animate, handleClick, handleMouseDown, handleMouseMove, handleMouseUp, handleResize, initThreeJS, loadAndApplyTexture]);
+  }, [animate, handleClick, handleMouseDown, handleMouseMove, handleMouseUp, handleResize, initThreeJS, loadAndApplyTexture, createFallbackSphere]);
 
   // 当媒体文件加载完成且Three.js初始化完成时，确保贴图正确加载
   useEffect(() => {
