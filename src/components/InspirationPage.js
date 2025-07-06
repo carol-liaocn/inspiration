@@ -25,14 +25,14 @@ const InspirationPage = () => {
           project.tags.some(tag => tag.toLowerCase() === activeFilter.toLowerCase())
         ), [activeFilter, processedProjects]);
 
-  // 使用无限滚动Hook
+  // 使用无限滚动Hook - 优化首屏加载
   const {
     displayedItems: displayedProjects,
     isLoading,
     hasMore,
     lastItemRef,
     reset
-  } = useInfiniteScroll(filteredProjects, 9); // 每次加载9个项目
+  } = useInfiniteScroll(filteredProjects, 6); // 每次加载6个项目，优化首屏性能
 
   // 当筛选条件改变时重置
   React.useEffect(() => {
